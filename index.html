@@ -2,225 +2,573 @@
 <html lang="zh-CN">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>AI心理测评系统</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      margin: 0;
-      padding: 20px;
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    body{
+
+      font-family:
+      "PingFang SC",
+      "Microsoft YaHei",
+      sans-serif;
+
+      background:
+      linear-gradient(
+      135deg,
+      #eef2ff,
+      #f8fbff);
+
+      padding:30px;
     }
 
-    h1,h2,h3 {
-      text-align: center;
+    .container{
+
+      max-width:1000px;
+
+      margin:auto;
+
+      background:white;
+
+      border-radius:24px;
+
+      overflow:hidden;
+
+      box-shadow:
+      0 10px 40px
+      rgba(0,0,0,0.08);
     }
 
-    .question {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 20px;
+    /* 顶部 */
+
+    .header{
+
+      background:
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6f7bf7);
+
+      color:white;
+
+      padding:50px 30px;
+
+      text-align:center;
     }
 
-    .option-btn {
-      padding: 10px 22px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-right: 10px;
-      margin-top: 10px;
-      background: #4a90e2;
-      color: white;
-      font-size: 15px;
+    .header h1{
+
+      font-size:38px;
+
+      margin-bottom:15px;
     }
 
-    .option-btn:hover {
-      opacity: 0.9;
+    .header p{
+
+      opacity:0.9;
+
+      font-size:16px;
     }
 
-    .selected {
-      background: #28a745 !important;
+    /* 内容 */
+
+    .content{
+
+      padding:40px;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      font-size: 16px;
+    /* 输入 */
+
+    .start-box{
+
+      text-align:center;
     }
 
-    .main-btn {
-      padding: 12px 30px;
-      background: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-      font-size: 16px;
+    input{
+
+      width:100%;
+
+      max-width:400px;
+
+      padding:14px;
+
+      border-radius:10px;
+
+      border:1px solid #ddd;
+
+      font-size:16px;
+
+      margin-top:15px;
     }
 
-    .main-btn:hover {
-      opacity: 0.9;
+    /* 按钮 */
+
+    .main-btn{
+
+      background:
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6f7bf7);
+
+      color:white;
+
+      border:none;
+
+      padding:14px 36px;
+
+      border-radius:12px;
+
+      font-size:16px;
+
+      cursor:pointer;
+
+      margin-top:20px;
+
+      transition:0.3s;
+    }
+
+    .main-btn:hover{
+
+      transform:translateY(-2px);
+
+      opacity:0.95;
+    }
+
+    /* 题目 */
+
+    .question{
+
+      background:#fafcff;
+
+      border:1px solid #e8edf5;
+
+      border-radius:18px;
+
+      padding:28px;
+
+      margin-bottom:24px;
+
+      transition:0.3s;
+    }
+
+    .question:hover{
+
+      transform:translateY(-2px);
+
+      box-shadow:
+      0 4px 16px
+      rgba(0,0,0,0.05);
+    }
+
+    .question-title{
+
+      font-size:18px;
+
+      font-weight:bold;
+
+      margin-bottom:20px;
+
+      line-height:1.7;
+    }
+
+    /* 选项 */
+
+    .options{
+
+      display:flex;
+
+      flex-wrap:wrap;
+
+      gap:12px;
+    }
+
+    .option-btn{
+
+      padding:12px 22px;
+
+      border:none;
+
+      border-radius:12px;
+
+      background:#edf3ff;
+
+      color:#333;
+
+      cursor:pointer;
+
+      transition:0.3s;
+
+      font-size:15px;
+    }
+
+    .option-btn:hover{
+
+      background:#dbe7ff;
+    }
+
+    .selected{
+
+      background:
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6f7bf7);
+
+      color:white;
+    }
+
+    /* loading */
+
+    #loading{
+
+      display:none;
+
+      text-align:center;
+
+      padding:60px;
+
+      font-size:20px;
+
+      color:#666;
+    }
+
+    /* 结果 */
+
+    #result{
+
+      display:none;
+    }
+
+    .report-card{
+
+      background:#fafcff;
+
+      border-radius:20px;
+
+      padding:35px;
+
+      margin-top:30px;
+
+      border:1px solid #e8edf5;
+    }
+
+    .report-header{
+
+      text-align:center;
+
+      margin-bottom:30px;
+    }
+
+    .report-header h2{
+
+      font-size:32px;
+
+      color:#333;
+
+      margin-bottom:10px;
+    }
+
+    .risk-level{
+
+      display:inline-block;
+
+      padding:10px 20px;
+
+      border-radius:999px;
+
+      background:#fff3cd;
+
+      color:#856404;
+
+      font-weight:bold;
+
+      margin-top:10px;
+    }
+
+    .report-grid{
+
+      display:grid;
+
+      grid-template-columns:
+      repeat(auto-fit,minmax(220px,1fr));
+
+      gap:20px;
+
+      margin-top:30px;
+    }
+
+    .score-box{
+
+      background:white;
+
+      padding:25px;
+
+      border-radius:16px;
+
+      text-align:center;
+
+      box-shadow:
+      0 2px 10px
+      rgba(0,0,0,0.05);
+    }
+
+    .score-box h3{
+
+      font-size:18px;
+
+      margin-bottom:10px;
+    }
+
+    .score{
+
+      font-size:42px;
+
+      font-weight:bold;
+
+      color:#4a90e2;
+    }
+
+    /* 文本 */
+
+    .analysis{
+
+      margin-top:40px;
+
+      background:white;
+
+      padding:30px;
+
+      border-radius:18px;
+
+      line-height:2;
+
+      font-size:16px;
+
+      color:#444;
+
+      box-shadow:
+      0 2px 10px
+      rgba(0,0,0,0.05);
+    }
+
+    canvas{
+
+      margin-top:40px;
     }
 
     #exam,
     #loading,
-    #result {
-      display: none;
+    #result{
+
+      display:none;
     }
 
-    #loading {
-      text-align: center;
-      font-size: 18px;
-      margin-top: 30px;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      line-height: 1.8;
-      background: #fafafa;
-      padding: 15px;
-      border-radius: 8px;
-    }
   </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-  <h1>AI心理测评系统</h1>
+  <!-- 顶部 -->
 
-  <!-- 登录 -->
-  <div id="login">
+  <div class="header">
 
-    <label>请输入姓名：</label>
+    <h1>AI心理测评系统</h1>
 
-    <input type="text" id="name" placeholder="请输入姓名">
-
-    <div style="text-align:center;">
-      <button class="main-btn" onclick="startExam()">
-        开始测评
-      </button>
-    </div>
+    <p>
+      基于AI生成的个性化心理分析报告
+    </p>
 
   </div>
 
-  <!-- 测评 -->
-  <div id="exam">
+  <!-- 内容 -->
 
-    <h2>请根据真实情况作答</h2>
+  <div class="content">
 
-    <!-- 题目1 -->
-    <div class="question">
+    <!-- 开始 -->
 
-      <p>1. 你最近是否容易焦虑？</p>
+    <div id="start">
 
-      <button class="option-btn"
-        onclick="selectAnswer('anxiety',1,this)">
-        是
-      </button>
+      <div class="start-box">
 
-      <button class="option-btn"
-        onclick="selectAnswer('anxiety',0,this)">
-        否
-      </button>
+        <h2>开始测评</h2>
 
-    </div>
+        <input
+          type="text"
+          id="name"
+          placeholder="请输入姓名">
 
-    <!-- 题目2 -->
-    <div class="question">
+        <br>
 
-      <p>2. 你最近是否感觉压力较大？</p>
+        <button
+          class="main-btn"
+          onclick="startExam()">
 
-      <button class="option-btn"
-        onclick="selectAnswer('stress',1,this)">
-        是
-      </button>
+          开始测评
 
-      <button class="option-btn"
-        onclick="selectAnswer('stress',0,this)">
-        否
-      </button>
+        </button>
+
+      </div>
 
     </div>
 
-    <!-- 题目3 -->
-    <div class="question">
+    <!-- 考试 -->
 
-      <p>3. 你最近是否睡眠质量不好？</p>
+    <div id="exam">
 
-      <button class="option-btn"
-        onclick="selectAnswer('sleep',1,this)">
-        是
-      </button>
+      <h2
+        style="
+        text-align:center;
+        margin-bottom:40px;">
 
-      <button class="option-btn"
-        onclick="selectAnswer('sleep',0,this)">
-        否
-      </button>
+        请根据真实情况作答
 
-    </div>
+      </h2>
 
-    <!-- 题目4 -->
-    <div class="question">
+      <div id="questions"></div>
 
-      <p>4. 你最近是否情绪波动明显？</p>
+      <div
+        style="
+        text-align:center;
+        margin-top:40px;">
 
-      <button class="option-btn"
-        onclick="selectAnswer('emotion',1,this)">
-        是
-      </button>
+        <button
+          class="main-btn"
+          onclick="submitExam()">
 
-      <button class="option-btn"
-        onclick="selectAnswer('emotion',0,this)">
-        否
-      </button>
+          提交测评
+
+        </button>
+
+      </div>
 
     </div>
 
-    <div style="text-align:center;">
-      <button class="main-btn" onclick="submitExam()">
-        提交测评
-      </button>
+    <!-- loading -->
+
+    <div id="loading">
+
+      AI正在生成专业心理报告...
+
     </div>
 
-  </div>
+    <!-- 结果 -->
 
-  <!-- 加载 -->
-  <div id="loading">
-    AI正在生成测评报告，请稍候...
-  </div>
+    <div id="result">
 
-  <!-- 结果 -->
-  <div id="result">
+      <div class="report-card">
 
-    <h2>测评完成</h2>
+        <div class="report-header">
 
-    <canvas id="radarChart"></canvas>
+          <h2>心理测评报告</h2>
 
-    <h3>AI分析报告</h3>
+          <div class="risk-level"
+            id="riskLevel">
 
-    <pre id="report"></pre>
+            中等压力风险
+
+          </div>
+
+        </div>
+
+        <!-- 雷达图 -->
+
+        <canvas id="radarChart"></canvas>
+
+        <!-- 分数 -->
+
+        <div class="report-grid">
+
+          <div class="score-box">
+
+            <h3>焦虑指数</h3>
+
+            <div class="score"
+              id="anxietyScore">
+
+              0
+
+            </div>
+
+          </div>
+
+          <div class="score-box">
+
+            <h3>压力指数</h3>
+
+            <div class="score"
+              id="stressScore">
+
+              0
+
+            </div>
+
+          </div>
+
+          <div class="score-box">
+
+            <h3>睡眠指数</h3>
+
+            <div class="score"
+              id="sleepScore">
+
+              0
+
+            </div>
+
+          </div>
+
+          <div class="score-box">
+
+            <h3>情绪指数</h3>
+
+            <div class="score"
+              id="emotionScore">
+
+              0
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- AI报告 -->
+
+        <div class="analysis">
+
+          <h3
+            style="
+            margin-bottom:20px;">
+
+            AI分析报告
+
+          </h3>
+
+          <div id="reportText"></div>
+
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
@@ -228,20 +576,137 @@
 
 <script>
 
-  // ======================
-  // 分数对象
-  // ======================
+  // =====================
+  // 题库（20题）
+  // =====================
+
+  const questions = [
+
+    {
+      text:"1. 你最近是否经常感到焦虑？",
+      type:"anxiety"
+    },
+
+    {
+      text:"2. 你是否容易紧张？",
+      type:"anxiety"
+    },
+
+    {
+      text:"3. 你是否会担心未来？",
+      type:"anxiety"
+    },
+
+    {
+      text:"4. 你是否容易情绪低落？",
+      type:"emotion"
+    },
+
+    {
+      text:"5. 你是否容易烦躁？",
+      type:"emotion"
+    },
+
+    {
+      text:"6. 你是否容易发脾气？",
+      type:"emotion"
+    },
+
+    {
+      text:"7. 你最近压力是否较大？",
+      type:"stress"
+    },
+
+    {
+      text:"8. 你是否感觉学习/工作负担重？",
+      type:"stress"
+    },
+
+    {
+      text:"9. 你是否经常疲惫？",
+      type:"stress"
+    },
+
+    {
+      text:"10. 你是否睡眠困难？",
+      type:"sleep"
+    },
+
+    {
+      text:"11. 你是否容易半夜醒来？",
+      type:"sleep"
+    },
+
+    {
+      text:"12. 你是否睡醒后仍感疲惫？",
+      type:"sleep"
+    },
+
+    {
+      text:"13. 你是否容易胡思乱想？",
+      type:"anxiety"
+    },
+
+    {
+      text:"14. 你是否容易自责？",
+      type:"emotion"
+    },
+
+    {
+      text:"15. 你是否觉得难以放松？",
+      type:"stress"
+    },
+
+    {
+      text:"16. 你是否经常失眠？",
+      type:"sleep"
+    },
+
+    {
+      text:"17. 你是否经常感到孤独？",
+      type:"emotion"
+    },
+
+    {
+      text:"18. 你是否容易对事情悲观？",
+      type:"emotion"
+    },
+
+    {
+      text:"19. 你是否容易心烦？",
+      type:"stress"
+    },
+
+    {
+      text:"20. 你是否经常感到压力无法释放？",
+      type:"stress"
+    }
+
+  ];
+
+  // =====================
+  // 分数
+  // =====================
 
   let scores = {
-    anxiety: null,
-    stress: null,
-    sleep: null,
-    emotion: null
+
+    anxiety:0,
+
+    stress:0,
+
+    sleep:0,
+
+    emotion:0
+
   };
 
-  // ======================
-  // 开始测评
-  // ======================
+  // 已答题
+
+  let answered = {};
+
+  // =====================
+  // 开始
+  // =====================
 
   function startExam(){
 
@@ -255,145 +720,148 @@
       return;
     }
 
-    document.getElementById("login")
+    document.getElementById("start")
       .style.display = "none";
 
     document.getElementById("exam")
       .style.display = "block";
+
+    renderQuestions();
   }
 
-  // ======================
-  // 选择答案（已修复）
-  // ======================
+  // =====================
+  // 渲染题目
+  // =====================
 
-  function selectAnswer(type, value, btn){
+  function renderQuestions(){
 
-    // 保存分数
-    scores[type] = value;
+    const box =
+      document.getElementById("questions");
 
-    // 找到当前题目
-    const questionBox =
-      btn.parentElement;
+    box.innerHTML = "";
 
-    // 清除同题按钮高亮
+    questions.forEach((q,index)=>{
+
+      box.innerHTML += `
+
+      <div class="question">
+
+        <div class="question-title">
+
+          ${q.text}
+
+        </div>
+
+        <div class="options">
+
+          <button
+            class="option-btn"
+            onclick="selectAnswer(
+              ${index},
+              '${q.type}',
+              0,
+              this
+            )">
+
+            从不
+
+          </button>
+
+          <button
+            class="option-btn"
+            onclick="selectAnswer(
+              ${index},
+              '${q.type}',
+              1,
+              this
+            )">
+
+            偶尔
+
+          </button>
+
+          <button
+            class="option-btn"
+            onclick="selectAnswer(
+              ${index},
+              '${q.type}',
+              2,
+              this
+            )">
+
+            经常
+
+          </button>
+
+          <button
+            class="option-btn"
+            onclick="selectAnswer(
+              ${index},
+              '${q.type}',
+              3,
+              this
+            )">
+
+            非常频繁
+
+          </button>
+
+        </div>
+
+      </div>
+
+      `;
+    });
+  }
+
+  // =====================
+  // 选择
+  // =====================
+
+  function selectAnswer(
+    index,
+    type,
+    value,
+    btn
+  ){
+
+    // 如果之前选过
+    if(answered[index] !== undefined){
+
+      scores[type] -= answered[index];
+    }
+
+    answered[index] = value;
+
+    scores[type] += value;
+
+    // 当前题目按钮
+
     const buttons =
-      questionBox.querySelectorAll("button");
+      btn.parentElement.querySelectorAll("button");
 
-    buttons.forEach(b => {
+    buttons.forEach(b=>{
+
       b.classList.remove("selected");
     });
 
-    // 当前按钮高亮
     btn.classList.add("selected");
   }
 
-  // ======================
-  // AI报告
-  // ======================
-
-  function generateLocalReport(){
-
-    let total =
-      scores.anxiety +
-      scores.stress +
-      scores.sleep +
-      scores.emotion;
-
-    let level = "";
-
-    if(total <= 1){
-
-      level = "心理状态良好";
-
-    }else if(total <= 2){
-
-      level = "存在轻度压力";
-
-    }else{
-
-      level = "近期压力较明显";
-    }
-
-    return `
-【总体评估】
-
-${level}
-
-【维度分析】
-
-焦虑指数：${scores.anxiety}
-
-压力指数：${scores.stress}
-
-睡眠指数：${scores.sleep}
-
-情绪指数：${scores.emotion}
-
-【建议】
-
-1. 保持规律作息
-
-2. 学会情绪释放
-
-3. 保持适当运动
-
-4. 与朋友家人沟通
-`;
-  }
-
-  // ======================
-  // 雷达图
-  // ======================
-
-  function drawChart(){
-
-    const ctx =
-      document.getElementById("radarChart");
-
-    new Chart(ctx, {
-
-      type: "radar",
-
-      data: {
-
-        labels: [
-          "焦虑",
-          "压力",
-          "睡眠",
-          "情绪"
-        ],
-
-        datasets: [{
-
-          label: "心理指标",
-
-          data: [
-            scores.anxiety,
-            scores.stress,
-            scores.sleep,
-            scores.emotion
-          ]
-
-        }]
-      }
-    });
-  }
-
-  // ======================
+  // =====================
   // 提交
-  // ======================
+  // =====================
 
   function submitExam(){
 
-    // 检查是否完成
-    for(let key in scores){
+    if(
+      Object.keys(answered).length
+      < questions.length
+    ){
 
-      if(scores[key] === null){
+      alert("请完成全部题目");
 
-        alert("请完成所有题目");
-
-        return;
-      }
+      return;
     }
 
     document.getElementById("exam")
@@ -402,24 +870,180 @@ ${level}
     document.getElementById("loading")
       .style.display = "block";
 
-    // 模拟AI生成
-    setTimeout(() => {
+    setTimeout(()=>{
 
-      const report =
-        generateLocalReport();
+      generateReport();
 
-      document.getElementById("loading")
-        .style.display = "none";
+    },2000);
+  }
 
-      document.getElementById("result")
-        .style.display = "block";
+  // =====================
+  // 生成报告
+  // =====================
 
-      drawChart();
+  function generateReport(){
 
-      document.getElementById("report")
-        .innerText = report;
+    document.getElementById("loading")
+      .style.display = "none";
 
-    }, 1500);
+    document.getElementById("result")
+      .style.display = "block";
+
+    // 分数显示
+
+    document.getElementById("anxietyScore")
+      .innerText = scores.anxiety;
+
+    document.getElementById("stressScore")
+      .innerText = scores.stress;
+
+    document.getElementById("sleepScore")
+      .innerText = scores.sleep;
+
+    document.getElementById("emotionScore")
+      .innerText = scores.emotion;
+
+    // 总分
+
+    const total =
+
+      scores.anxiety +
+
+      scores.stress +
+
+      scores.sleep +
+
+      scores.emotion;
+
+    // 风险等级
+
+    let level = "";
+
+    if(total <= 15){
+
+      level = "心理状态良好";
+
+    }else if(total <= 30){
+
+      level = "中等压力风险";
+
+    }else{
+
+      level = "较高压力风险";
+    }
+
+    document.getElementById("riskLevel")
+      .innerText = level;
+
+    // AI报告
+
+    const report = `
+
+总体分析：
+
+根据本次心理测评结果，
+你当前存在一定程度的心理压力与情绪波动。
+
+其中：
+
+焦虑指数为 ${scores.anxiety}，
+说明近期可能存在对未来、
+学习或生活方面的担忧。
+
+压力指数为 ${scores.stress}，
+说明当前压力来源较明显，
+需要适当进行放松与调节。
+
+睡眠指数为 ${scores.sleep}，
+说明近期睡眠质量一般，
+建议改善作息规律。
+
+情绪指数为 ${scores.emotion}，
+说明情绪稳定性存在一定波动。
+
+建议：
+
+1. 保持规律作息，
+避免长期熬夜。
+
+2. 每周适量运动，
+帮助缓解心理压力。
+
+3. 学会与朋友、
+家人进行情绪交流。
+
+4. 适当减少高压环境下的负担。
+
+5. 如长期持续焦虑，
+建议寻求专业心理咨询帮助。
+
+`;
+
+    document.getElementById("reportText")
+      .innerText = report;
+
+    drawChart();
+  }
+
+  // =====================
+  // 雷达图
+  // =====================
+
+  function drawChart(){
+
+    const ctx =
+      document.getElementById("radarChart");
+
+    new Chart(ctx,{
+
+      type:"radar",
+
+      data:{
+
+        labels:[
+          "焦虑",
+          "压力",
+          "睡眠",
+          "情绪"
+        ],
+
+        datasets:[{
+
+          label:"心理指数",
+
+          data:[
+
+            scores.anxiety,
+
+            scores.stress,
+
+            scores.sleep,
+
+            scores.emotion
+
+          ],
+
+          backgroundColor:
+          "rgba(74,144,226,0.2)",
+
+          borderColor:
+          "#4a90e2",
+
+          borderWidth:2
+        }]
+      },
+
+      options:{
+
+        scales:{
+
+          r:{
+
+            beginAtZero:true
+          }
+        }
+      }
+    });
   }
 
 </script>
