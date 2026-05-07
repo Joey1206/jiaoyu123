@@ -2,12 +2,12 @@
 <html lang="zh-CN">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0"/>
 
   <title>AI心理测评系统</title>
 
-  <!-- 图表 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -19,216 +19,463 @@
     }
 
     body{
-      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+
+      font-family:
+      "PingFang SC",
+      "Microsoft YaHei",
+      sans-serif;
+
       background:
-      linear-gradient(135deg,#eef4ff,#f8fbff);
+      linear-gradient(
+      135deg,
+      #eef3ff,
+      #f9fbff
+      );
+
       min-height:100vh;
-      padding:40px 15px;
-      color:#333;
+
+      padding:25px;
     }
 
     .container{
-      max-width:900px;
+
+      max-width:920px;
+
       margin:auto;
+
       background:#fff;
-      border-radius:24px;
+
+      border-radius:28px;
+
       overflow:hidden;
+
       box-shadow:
-      0 10px 40px rgba(0,0,0,0.08);
+      0 12px 40px rgba(0,0,0,0.08);
     }
 
-    .top-banner{
+    /* 顶部 */
+
+    .header{
+
       background:
-      linear-gradient(135deg,#4a90e2,#6a8dff);
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6d8dff
+      );
+
       color:#fff;
-      padding:50px 30px;
+
+      padding:55px 30px;
+
       text-align:center;
     }
 
-    .top-banner h1{
+    .header h1{
+
       font-size:38px;
-      margin-bottom:15px;
+
+      margin-bottom:16px;
     }
 
-    .top-banner p{
-      opacity:0.95;
-      line-height:1.8;
+    .header p{
+
+      opacity:0.92;
+
+      line-height:1.9;
+
+      font-size:15px;
     }
+
+    /* 内容 */
 
     .content{
-      padding:35px;
+
+      padding:35px 25px 50px;
     }
 
     .card{
+
       background:#fff;
-      border:1px solid #eee;
-      border-radius:18px;
-      padding:24px;
+
+      border:1px solid #edf1f7;
+
+      border-radius:22px;
+
+      padding:25px;
+
       margin-bottom:22px;
-      transition:0.3s;
+
+      transition:0.25s;
+
+      box-shadow:
+      0 3px 10px rgba(0,0,0,0.03);
     }
 
     .card:hover{
+
       transform:translateY(-2px);
+
       box-shadow:
-      0 8px 20px rgba(0,0,0,0.05);
+      0 8px 20px rgba(0,0,0,0.06);
     }
 
-    .question-title{
+    .question{
+
       font-size:18px;
+
+      line-height:1.8;
+
       font-weight:600;
+
       margin-bottom:18px;
-      line-height:1.7;
     }
 
     .options{
+
       display:flex;
+
       flex-wrap:wrap;
+
       gap:12px;
     }
 
+    /* 选项按钮 */
+
     .option-btn{
+
       border:none;
+
       padding:12px 22px;
-      border-radius:12px;
-      cursor:pointer;
-      background:#edf3ff;
+
+      border-radius:14px;
+
+      background:#edf4ff;
+
       color:#4a90e2;
+
+      cursor:pointer;
+
       font-size:15px;
-      transition:0.25s;
+
+      transition:
+      background 0.12s,
+      transform 0.08s,
+      color 0.12s;
+
+      -webkit-tap-highlight-color:
+      transparent;
     }
 
     .option-btn:hover{
-      background:#dbe9ff;
+
+      background:#dce8ff;
+    }
+
+    .option-btn:active{
+
+      transform:scale(0.96);
     }
 
     .selected{
-      background:#4a90e2 !important;
+
+      background:
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6f8fff
+      ) !important;
+
       color:#fff !important;
+
       transform:scale(1.03);
     }
 
+    /* 输入 */
+
     input{
+
       width:100%;
+
       padding:16px;
-      border-radius:14px;
-      border:1px solid #ddd;
+
+      border-radius:16px;
+
+      border:1px solid #d9e3f1;
+
+      margin-top:20px;
+
       font-size:16px;
-      margin-top:18px;
+
+      outline:none;
     }
 
+    input:focus{
+
+      border-color:#4a90e2;
+    }
+
+    /* 主按钮 */
+
     .main-btn{
-      background:
-      linear-gradient(135deg,#4a90e2,#6a8dff);
-      color:#fff;
+
       border:none;
+
+      background:
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6f8fff
+      );
+
+      color:#fff;
+
       padding:15px 40px;
-      border-radius:14px;
+
+      border-radius:16px;
+
       font-size:16px;
+
       cursor:pointer;
-      transition:0.3s;
+
+      transition:0.2s;
     }
 
     .main-btn:hover{
+
       opacity:0.92;
-      transform:translateY(-2px);
+    }
+
+    .main-btn:active{
+
+      transform:scale(0.97);
     }
 
     .center{
+
       text-align:center;
+
       margin-top:35px;
     }
+
+    /* 隐藏区域 */
 
     #exam,
     #loading,
     #result{
+
       display:none;
     }
 
+    /* 加载 */
+
     #loading{
+
       text-align:center;
-      padding:50px;
+
+      padding:80px 20px;
+
+      color:#666;
+
       font-size:20px;
-      color:#666;
     }
 
-    .result-header{
-      text-align:center;
-      margin-bottom:30px;
-    }
+    /* 结果UI */
 
-    .level-box{
+    .result-wrap{
+
       background:
-      linear-gradient(135deg,#4a90e2,#6a8dff);
+      linear-gradient(
+      135deg,
+      #f7faff,
+      #ffffff
+      );
+
+      border-radius:24px;
+
+      padding:30px;
+    }
+
+    .result-top{
+
+      text-align:center;
+
+      margin-bottom:25px;
+    }
+
+    .result-top h2{
+
+      font-size:34px;
+
+      color:#333;
+
+      margin-bottom:15px;
+    }
+
+    .tag{
+
+      display:inline-block;
+
+      padding:10px 22px;
+
+      border-radius:999px;
+
+      background:
+      linear-gradient(
+      135deg,
+      #4a90e2,
+      #6f8fff
+      );
+
       color:#fff;
-      padding:20px;
-      border-radius:18px;
-      margin-top:25px;
-      text-align:center;
-    }
 
-    .report-box{
-      background:#f8fbff;
-      border-radius:18px;
-      padding:25px;
-      margin-top:30px;
-      line-height:2;
-      font-size:16px;
-    }
-
-    .score-grid{
-      display:grid;
-      grid-template-columns:
-      repeat(auto-fit,minmax(150px,1fr));
-      gap:18px;
-      margin-top:30px;
-    }
-
-    .score-item{
-      background:#fff;
-      border-radius:16px;
-      padding:20px;
-      text-align:center;
-      box-shadow:
-      0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    .score-item h3{
-      color:#666;
-      margin-bottom:12px;
       font-size:15px;
     }
 
-    .score-item p{
-      font-size:30px;
+    /* 数据卡片 */
+
+    .score-grid{
+
+      display:grid;
+
+      grid-template-columns:
+      repeat(auto-fit,minmax(150px,1fr));
+
+      gap:16px;
+
+      margin-top:30px;
+    }
+
+    .score-card{
+
+      background:#fff;
+
+      border-radius:20px;
+
+      padding:22px;
+
+      text-align:center;
+
+      box-shadow:
+      0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .score-card h3{
+
+      color:#777;
+
+      font-size:15px;
+
+      margin-bottom:12px;
+    }
+
+    .score-card p{
+
+      font-size:32px;
+
       color:#4a90e2;
+
       font-weight:bold;
     }
 
-    canvas{
-      margin-top:35px;
+    /* 图表区域 */
+
+    .chart-box{
+
+      width:100%;
+
+      max-width:420px;
+
+      margin:35px auto 10px;
+
+      background:#fff;
+
+      padding:20px;
+
+      border-radius:24px;
+
+      box-shadow:
+      0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    #radarChart{
+
+      width:100% !important;
+
+      height:320px !important;
+    }
+
+    /* 报告 */
+
+    .report-box{
+
+      margin-top:28px;
+
+      background:#fff;
+
+      border-radius:24px;
+
+      padding:30px;
+
+      box-shadow:
+      0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .report-title{
+
+      font-size:22px;
+
+      margin-bottom:20px;
+
+      color:#333;
+    }
+
+    .report-content{
+
+      line-height:2.1;
+
+      color:#555;
+
+      font-size:16px;
+
+      white-space:pre-wrap;
     }
 
     @media(max-width:768px){
 
-      .top-banner h1{
+      .header h1{
+
         font-size:30px;
       }
 
-      .content{
-        padding:20px;
-      }
+      .question{
 
-      .question-title{
         font-size:16px;
       }
 
       .option-btn{
+
         width:100%;
+      }
+
+      .content{
+
+        padding:22px 16px 40px;
+      }
+
+      .chart-box{
+
+        max-width:100%;
+      }
+
+      #radarChart{
+
+        height:260px !important;
       }
     }
 
   </style>
+
 </head>
 
 <body>
@@ -236,13 +483,14 @@
 <div class="container">
 
   <!-- 顶部 -->
-  <div class="top-banner">
+
+  <div class="header">
 
     <h1>AI心理测评系统</h1>
 
     <p>
-      基于情绪、压力、睡眠、焦虑等多个维度进行综合分析，
-      自动生成个性化心理评估报告。
+      基于焦虑、压力、睡眠、情绪等多个维度，
+      自动生成心理分析报告与可视化结果。
     </p>
 
   </div>
@@ -250,6 +498,7 @@
   <div class="content">
 
     <!-- 登录 -->
+
     <div id="login">
 
       <div class="card">
@@ -277,57 +526,92 @@
     </div>
 
     <!-- 测评 -->
+
     <div id="exam"></div>
 
     <!-- 加载 -->
+
     <div id="loading">
-      AI正在分析你的心理状态，请稍候...
+      AI正在生成你的心理分析报告...
     </div>
 
     <!-- 结果 -->
+
     <div id="result">
 
-      <div class="result-header">
+      <div class="result-wrap">
 
-        <h2>心理测评报告</h2>
+        <div class="result-top">
 
-      </div>
+          <h2>心理测评报告</h2>
 
-      <div class="level-box">
+          <div
+            class="tag"
+            id="levelText">
+          </div>
 
-        <h2 id="levelText"></h2>
-
-      </div>
-
-      <div class="score-grid">
-
-        <div class="score-item">
-          <h3>焦虑指数</h3>
-          <p id="anxietyScore">0</p>
         </div>
 
-        <div class="score-item">
-          <h3>压力指数</h3>
-          <p id="stressScore">0</p>
+        <!-- 数据 -->
+
+        <div class="score-grid">
+
+          <div class="score-card">
+
+            <h3>焦虑指数</h3>
+
+            <p id="anxietyScore">0</p>
+
+          </div>
+
+          <div class="score-card">
+
+            <h3>压力指数</h3>
+
+            <p id="stressScore">0</p>
+
+          </div>
+
+          <div class="score-card">
+
+            <h3>睡眠指数</h3>
+
+            <p id="sleepScore">0</p>
+
+          </div>
+
+          <div class="score-card">
+
+            <h3>情绪指数</h3>
+
+            <p id="emotionScore">0</p>
+
+          </div>
+
         </div>
 
-        <div class="score-item">
-          <h3>睡眠指数</h3>
-          <p id="sleepScore">0</p>
+        <!-- 图表 -->
+
+        <div class="chart-box">
+
+          <canvas id="radarChart"></canvas>
+
         </div>
 
-        <div class="score-item">
-          <h3>情绪指数</h3>
-          <p id="emotionScore">0</p>
+        <!-- 报告 -->
+
+        <div class="report-box">
+
+          <div class="report-title">
+            AI心理分析
+          </div>
+
+          <div
+            class="report-content"
+            id="report">
+          </div>
+
         </div>
-
-      </div>
-
-      <canvas id="radarChart"></canvas>
-
-      <div class="report-box">
-
-        <div id="report"></div>
 
       </div>
 
@@ -339,9 +623,9 @@
 
 <script>
 
-  // =====================
-  // 题库（20题）
-  // =====================
+  // =========================
+  // 题库
+  // =========================
 
   const questions = [
 
@@ -351,7 +635,7 @@
     },
 
     {
-      text:"2. 你最近是否经常担心未来？",
+      text:"2. 你是否经常担心未来？",
       type:"anxiety"
     },
 
@@ -361,12 +645,12 @@
     },
 
     {
-      text:"4. 你最近是否经常感到压力大？",
+      text:"4. 你最近是否经常感到压力较大？",
       type:"stress"
     },
 
     {
-      text:"5. 你是否感觉学习或工作负担较重？",
+      text:"5. 你是否觉得学习或工作负担较重？",
       type:"stress"
     },
 
@@ -381,7 +665,7 @@
     },
 
     {
-      text:"8. 你是否经常失眠或难以入睡？",
+      text:"8. 你是否经常难以入睡？",
       type:"sleep"
     },
 
@@ -396,7 +680,7 @@
     },
 
     {
-      text:"11. 你是否容易感到烦躁？",
+      text:"11. 你是否容易烦躁？",
       type:"emotion"
     },
 
@@ -411,7 +695,7 @@
     },
 
     {
-      text:"14. 你是否觉得最近动力不足？",
+      text:"14. 你是否感觉动力不足？",
       type:"emotion"
     },
 
@@ -436,7 +720,7 @@
     },
 
     {
-      text:"19. 你是否容易对事情失去兴趣？",
+      text:"19. 你是否容易失去兴趣？",
       type:"emotion"
     },
 
@@ -447,11 +731,12 @@
 
   ];
 
-  // =====================
-  // 分数对象
-  // =====================
+  // =========================
+  // 分数
+  // =========================
 
   let scores = {
+
     anxiety:0,
     stress:0,
     sleep:0,
@@ -460,9 +745,9 @@
 
   let answered = {};
 
-  // =====================
-  // 开始测评
-  // =====================
+  // =========================
+  // 开始
+  // =========================
 
   function startExam(){
 
@@ -487,9 +772,9 @@
     renderQuestions();
   }
 
-  // =====================
+  // =========================
   // 渲染题目
-  // =====================
+  // =========================
 
   function renderQuestions(){
 
@@ -504,8 +789,10 @@
 
       <div class="card">
 
-        <div class="question-title">
+        <div class="question">
+
           ${q.text}
+
         </div>
 
         <div class="options">
@@ -514,9 +801,9 @@
             class="option-btn"
             id="q${index}_0"
             onclick="selectAnswer(
-              ${index},
-              '${q.type}',
-              0
+            ${index},
+            '${q.type}',
+            0
             )">
             从不
           </button>
@@ -525,9 +812,9 @@
             class="option-btn"
             id="q${index}_1"
             onclick="selectAnswer(
-              ${index},
-              '${q.type}',
-              1
+            ${index},
+            '${q.type}',
+            1
             )">
             偶尔
           </button>
@@ -536,9 +823,9 @@
             class="option-btn"
             id="q${index}_2"
             onclick="selectAnswer(
-              ${index},
-              '${q.type}',
-              2
+            ${index},
+            '${q.type}',
+            2
             )">
             经常
           </button>
@@ -547,9 +834,9 @@
             class="option-btn"
             id="q${index}_3"
             onclick="selectAnswer(
-              ${index},
-              '${q.type}',
-              3
+            ${index},
+            '${q.type}',
+            3
             )">
             总是
           </button>
@@ -563,40 +850,46 @@
 
     html += `
 
-      <div class="center">
+    <div class="center">
 
-        <button
-          class="main-btn"
-          onclick="submitExam()">
-          生成心理报告
-        </button>
+      <button
+        class="main-btn"
+        onclick="submitExam()">
+        生成心理报告
+      </button>
 
-      </div>
+    </div>
 
     `;
 
     exam.innerHTML = html;
   }
 
-  // =====================
-  // 选择答案
-  // =====================
+  // =========================
+  // 选择答案（极速反馈）
+  // =========================
 
-  function selectAnswer(index,type,value){
+  function selectAnswer(
+    index,
+    type,
+    value
+  ){
 
+    // 上一次答案
     const prev =
       answered[index];
 
-    if(prev){
+    if(prev !== undefined){
 
       scores[type] -= prev;
     }
 
+    // 保存答案
     answered[index] = value;
 
     scores[type] += value;
 
-    // 清除选中状态
+    // 清空状态
     for(let i=0;i<4;i++){
 
       document
@@ -607,14 +900,16 @@
 
     // 当前高亮
     document
-      .getElementById(`q${index}_${value}`)
+      .getElementById(
+      `q${index}_${value}`
+      )
       .classList
       .add("selected");
   }
 
-  // =====================
-  // 提交测评
-  // =====================
+  // =========================
+  // 提交
+  // =========================
 
   function submitExam(){
 
@@ -623,7 +918,7 @@
       < questions.length
     ){
 
-      alert("请完成全部题目");
+      alert("请完成所有题目");
 
       return;
     }
@@ -640,12 +935,12 @@
 
       generateReport();
 
-    },1800);
+    },1200);
   }
 
-  // =====================
-  // 生成报告
-  // =====================
+  // =========================
+  // 报告
+  // =========================
 
   function generateReport(){
 
@@ -657,7 +952,7 @@
       .getElementById("result")
       .style.display = "block";
 
-    // 数值展示
+    // 数据
     document
       .getElementById("anxietyScore")
       .innerText = scores.anxiety;
@@ -684,21 +979,23 @@
     let level = "";
     let report = "";
 
-    // 风险等级
     if(total <= 20){
 
       level = "心理状态良好";
 
       report = `
-你的整体心理状态较稳定，
-目前没有明显的心理压力风险。
+你当前整体心理状态较稳定。
 
-你在情绪调节、
-压力管理、
+从测评结果来看，
+你在焦虑控制、
+情绪稳定、
 睡眠状态等方面表现较好。
 
-建议继续保持规律生活，
-维持良好的作息与运动习惯。
+建议：
+
+• 继续保持规律作息
+• 保持运动与社交
+• 维持良好生活节奏
 `;
 
     }else if(total <= 40){
@@ -706,17 +1003,21 @@
       level = "存在轻度心理压力";
 
       report = `
-你近期可能存在一定压力，
-偶尔会出现情绪波动、
-焦虑或疲惫感。
+你近期可能存在一定心理压力。
 
-建议适当减少精神负担，
-保持规律作息，
-避免长期熬夜。
+可能会偶尔出现：
 
-适度运动、
-倾诉与休息，
-能够有效缓解当前状态。
+• 情绪波动
+• 睡眠不稳定
+• 精神疲惫
+• 焦虑感增加
+
+建议：
+
+1. 减少长期精神消耗
+2. 保持规律睡眠
+3. 增加放松时间
+4. 学会释放情绪
 `;
 
     }else{
@@ -724,22 +1025,23 @@
       level = "心理压力较明显";
 
       report = `
-你的测评结果显示，
-近期可能存在较明显的心理压力。
+你的测评结果显示：
 
-你可能出现：
+近期可能存在较明显的压力状态。
 
-• 情绪波动较大
-• 睡眠质量下降
-• 精神疲惫
+主要表现可能包括：
+
 • 焦虑感增强
+• 睡眠质量下降
+• 情绪波动明显
+• 精神持续疲劳
 
 建议：
 
-1. 保持稳定作息
-2. 减少长期精神压力
-3. 适当运动
-4. 与家人朋友沟通
+1. 调整作息与节奏
+2. 避免长期高压状态
+3. 保持运动
+4. 增加现实社交
 5. 必要时寻求专业帮助
 `;
     }
@@ -755,15 +1057,15 @@
     drawChart();
   }
 
-  // =====================
-  // 雷达图
-  // =====================
+  // =========================
+  // 雷达图（优化大小）
+  // =========================
 
   function drawChart(){
 
     const ctx =
       document.getElementById(
-        "radarChart"
+      "radarChart"
       );
 
     new Chart(ctx,{
@@ -788,21 +1090,46 @@
             scores.stress,
             scores.sleep,
             scores.emotion
-          ]
+          ],
+
+          fill:true
 
         }]
       },
 
       options:{
+
         responsive:true,
+
+        maintainAspectRatio:false,
+
+        plugins:{
+
+          legend:{
+            display:false
+          }
+        },
+
         scales:{
+
           r:{
+
             suggestedMin:0,
-            suggestedMax:20
+
+            suggestedMax:20,
+
+            ticks:{
+              display:false
+            },
+
+            pointLabels:{
+              font:{
+                size:14
+              }
+            }
           }
         }
       }
-
     });
   }
 
