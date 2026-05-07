@@ -2,9 +2,13 @@
 <html lang="zh-CN">
 
 <head>
+
   <meta charset="UTF-8" />
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0"/>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>AI心理测评系统</title>
 
@@ -106,7 +110,7 @@
 
       margin-bottom:22px;
 
-      transition:0.25s;
+      transition:0.2s;
 
       box-shadow:
       0 3px 10px rgba(0,0,0,0.03);
@@ -378,7 +382,7 @@
       font-weight:bold;
     }
 
-    /* 图表区域 */
+    /* 图表 */
 
     .chart-box{
 
@@ -405,40 +409,135 @@
       height:320px !important;
     }
 
-    /* 报告 */
+    /* AI报告 */
 
     .report-box{
 
       margin-top:28px;
-
-      background:#fff;
-
-      border-radius:24px;
-
-      padding:30px;
-
-      box-shadow:
-      0 6px 18px rgba(0,0,0,0.05);
     }
 
-    .report-title{
+    .ai-report-card{
 
-      font-size:22px;
+      background:
+      linear-gradient(
+      180deg,
+      #ffffff,
+      #f8fbff
+      );
 
-      margin-bottom:20px;
+      border-radius:28px;
+
+      overflow:hidden;
+
+      box-shadow:
+      0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .report-head{
+
+      display:flex;
+
+      gap:20px;
+
+      padding:28px;
+
+      color:#fff;
+    }
+
+    .report-head h3{
+
+      font-size:26px;
+
+      margin-bottom:10px;
+    }
+
+    .report-head p{
+
+      line-height:1.9;
+
+      opacity:0.95;
+    }
+
+    .good{
+
+      background:
+      linear-gradient(
+      135deg,
+      #52c41a,
+      #73d13d
+      );
+    }
+
+    .mid{
+
+      background:
+      linear-gradient(
+      135deg,
+      #faad14,
+      #ffc53d
+      );
+    }
+
+    .high{
+
+      background:
+      linear-gradient(
+      135deg,
+      #ff7875,
+      #ff4d4f
+      );
+    }
+
+    .emoji{
+
+      font-size:48px;
+
+      min-width:60px;
+    }
+
+    .report-section{
+
+      padding:28px 30px;
+
+      border-bottom:
+      1px solid #edf2f7;
+    }
+
+    .report-section:last-child{
+
+      border-bottom:none;
+    }
+
+    .report-section h4{
+
+      font-size:20px;
+
+      margin-bottom:18px;
 
       color:#333;
     }
 
-    .report-content{
+    .report-section p{
 
-      line-height:2.1;
+      line-height:2;
 
       color:#555;
 
-      font-size:16px;
+      margin-bottom:12px;
+    }
 
-      white-space:pre-wrap;
+    .report-section ul{
+
+      padding-left:20px;
+    }
+
+    .report-section li{
+
+      line-height:2.2;
+
+      color:#555;
+
+      margin-bottom:8px;
     }
 
     @media(max-width:768px){
@@ -471,6 +570,21 @@
       #radarChart{
 
         height:260px !important;
+      }
+
+      .report-head{
+
+        flex-direction:column;
+      }
+
+      .emoji{
+
+        font-size:42px;
+      }
+
+      .report-head h3{
+
+        font-size:22px;
       }
     }
 
@@ -525,7 +639,7 @@
 
     </div>
 
-    <!-- 测评 -->
+    <!-- 题目 -->
 
     <div id="exam"></div>
 
@@ -552,7 +666,7 @@
 
         </div>
 
-        <!-- 数据 -->
+        <!-- 分数 -->
 
         <div class="score-grid">
 
@@ -598,18 +712,11 @@
 
         </div>
 
-        <!-- 报告 -->
+        <!-- AI报告 -->
 
         <div class="report-box">
 
-          <div class="report-title">
-            AI心理分析
-          </div>
-
-          <div
-            class="report-content"
-            id="report">
-          </div>
+          <div id="report"></div>
 
         </div>
 
@@ -866,7 +973,7 @@
   }
 
   // =========================
-  // 选择答案（极速反馈）
+  // 选择答案
   // =========================
 
   function selectAnswer(
@@ -875,7 +982,6 @@
     value
   ){
 
-    // 上一次答案
     const prev =
       answered[index];
 
@@ -884,12 +990,10 @@
       scores[type] -= prev;
     }
 
-    // 保存答案
     answered[index] = value;
 
     scores[type] += value;
 
-    // 清空状态
     for(let i=0;i<4;i++){
 
       document
@@ -898,7 +1002,6 @@
       .remove("selected");
     }
 
-    // 当前高亮
     document
       .getElementById(
       `q${index}_${value}`
@@ -939,7 +1042,7 @@
   }
 
   // =========================
-  // 报告
+  // AI分析
   // =========================
 
   function generateReport(){
@@ -952,7 +1055,6 @@
       .getElementById("result")
       .style.display = "block";
 
-    // 数据
     document
       .getElementById("anxietyScore")
       .innerText = scores.anxiety;
@@ -969,7 +1071,6 @@
       .getElementById("emotionScore")
       .innerText = scores.emotion;
 
-    // 总分
     const total =
       scores.anxiety +
       scores.stress +
@@ -977,73 +1078,255 @@
       scores.emotion;
 
     let level = "";
-    let report = "";
+    let reportHtml = "";
+
+    // 良好
 
     if(total <= 20){
 
       level = "心理状态良好";
 
-      report = `
-你当前整体心理状态较稳定。
+      reportHtml = `
 
-从测评结果来看，
-你在焦虑控制、
-情绪稳定、
-睡眠状态等方面表现较好。
+      <div class="ai-report-card">
 
-建议：
+        <div class="report-head good">
 
-• 继续保持规律作息
-• 保持运动与社交
-• 维持良好生活节奏
-`;
+          <div class="emoji">
+            🌿
+          </div>
 
-    }else if(total <= 40){
+          <div>
+
+            <h3>
+              整体状态稳定
+            </h3>
+
+            <p>
+              你当前的心理状态整体较平稳，
+              情绪控制能力较好。
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="report-section">
+
+          <h4>AI观察</h4>
+
+          <p>
+            你具备一定的情绪调节能力，
+            面对压力时能够较理性地处理问题。
+          </p>
+
+        </div>
+
+        <div class="report-section">
+
+          <h4>生活建议</h4>
+
+          <ul>
+
+            <li>
+              ☀️ 保持规律睡眠与饮食。
+            </li>
+
+            <li>
+              🚶 每周适度运动，
+              能长期稳定情绪。
+            </li>
+
+            <li>
+              ☕ 不要长期让自己处于高效率状态。
+            </li>
+
+            <li>
+              👥 多与现实中的朋友交流。
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+      `;
+    }
+
+    // 中等压力
+
+    else if(total <= 40){
 
       level = "存在轻度心理压力";
 
-      report = `
-你近期可能存在一定心理压力。
+      reportHtml = `
 
-可能会偶尔出现：
+      <div class="ai-report-card">
 
-• 情绪波动
-• 睡眠不稳定
-• 精神疲惫
-• 焦虑感增加
+        <div class="report-head mid">
 
-建议：
+          <div class="emoji">
+            🌤️
+          </div>
 
-1. 减少长期精神消耗
-2. 保持规律睡眠
-3. 增加放松时间
-4. 学会释放情绪
-`;
+          <div>
 
-    }else{
+            <h3>
+              近期压力有所增加
+            </h3>
+
+            <p>
+              你最近可能存在一定程度的压力、
+              情绪波动或精神疲惫感。
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="report-section">
+
+          <h4>AI观察</h4>
+
+          <p>
+            你可能已经习惯了长期紧绷的状态，
+            即使休息时，
+            大脑也依然处于持续思考状态。
+          </p>
+
+        </div>
+
+        <div class="report-section">
+
+          <h4>现实建议</h4>
+
+          <ul>
+
+            <li>
+              📱 睡前减少刷手机时间。
+            </li>
+
+            <li>
+              🎧 多晒太阳、
+              听音乐、
+              散步。
+            </li>
+
+            <li>
+              🍜 不要长期忽略吃饭与休息。
+            </li>
+
+            <li>
+              🧑‍🤝‍🧑 找可信任的人倾诉。
+            </li>
+
+            <li>
+              ✍️ 尝试记录情绪日记。
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+      `;
+    }
+
+    // 高压力
+
+    else{
 
       level = "心理压力较明显";
 
-      report = `
-你的测评结果显示：
+      reportHtml = `
 
-近期可能存在较明显的压力状态。
+      <div class="ai-report-card">
 
-主要表现可能包括：
+        <div class="report-head high">
 
-• 焦虑感增强
-• 睡眠质量下降
-• 情绪波动明显
-• 精神持续疲劳
+          <div class="emoji">
+            🌧️
+          </div>
 
-建议：
+          <div>
 
-1. 调整作息与节奏
-2. 避免长期高压状态
-3. 保持运动
-4. 增加现实社交
-5. 必要时寻求专业帮助
-`;
+            <h3>
+              你最近可能真的很累了
+            </h3>
+
+            <p>
+              当前测评结果显示，
+              你的心理压力已经比较明显。
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="report-section">
+
+          <h4>AI观察</h4>
+
+          <p>
+            你可能正在经历：
+          </p>
+
+          <ul>
+
+            <li>长期焦虑</li>
+
+            <li>情绪压抑</li>
+
+            <li>睡眠下降</li>
+
+            <li>精神疲劳</li>
+
+          </ul>
+
+          <p>
+            有时候，
+            不是你不够努力，
+            而是大脑已经很久没有真正休息了。
+          </p>
+
+        </div>
+
+        <div class="report-section">
+
+          <h4>现实中的建议</h4>
+
+          <ul>
+
+            <li>
+              🌙 先慢慢恢复睡眠。
+            </li>
+
+            <li>
+              🚶 多出门走走，
+              不要长期封闭自己。
+            </li>
+
+            <li>
+              🍱 保持规律饮食。
+            </li>
+
+            <li>
+              📞 不要一直一个人硬撑。
+            </li>
+
+            <li>
+              ❤️ 必要时可以寻求专业支持。
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+      `;
     }
 
     document
@@ -1052,13 +1335,13 @@
 
     document
       .getElementById("report")
-      .innerText = report;
+      .innerHTML = reportHtml;
 
     drawChart();
   }
 
   // =========================
-  // 雷达图（优化大小）
+  // 雷达图
   // =========================
 
   function drawChart(){
@@ -1093,7 +1376,6 @@
           ],
 
           fill:true
-
         }]
       },
 
